@@ -98,7 +98,7 @@ def bo_iteration(config, dataset, state_dict, iteration, seed):
     state_dict = gp.state_dict()
     return new_x, new_y, state_dict
 
-def run_bo_experiment(config, maximizing=True, seed=0):
+def run_bo_experiment(config, maximizing=True, seed=0, print_progress=False):
     torch.manual_seed(seed)
     suppress_botorch_warnings(False)
     warnings.filterwarnings('ignore', 'Unknown solver options: seed')
@@ -111,26 +111,22 @@ def run_bo_experiment(config, maximizing=True, seed=0):
 
     dataset = load_dataset(config)
     state_dict = {}
-    maximum = []
-    max_pos = []
     random_search = []
 
     for iteration in range(config['iterations']):
         new_x, new_y, state_dict = bo_iteration(config, dataset, state_dict, iteration, seed)
         dataset.add(new_x, new_y)
-        maximum.append(dataset.y.max().numpy().squeeze())
-        max_pos.append(dataset.rescale(dataset.x[dataset.y.argmax()]).numpy().squeeze())
-        if maximizing:
-            print('Optimum found upto iteration {}: {}'.format(iteration, dataset.y.max().numpy()))
-        else: print('Optimum found upto iteration {}: {}'.format(iteration, -dataset.y.max().numpy()))
+        if print_progress:
+            if maximizing:
+                print('Optimum found upto iteration {}: {}'.format(iteration, dataset.y.max().numpy()))
+            else: print('Optimum found upto iteration {}: {}'.format(iteration, -dataset.y.max().numpy()))
 
     if not maximizing:
-        maximum = - np.array(maximum)
         dataset.y *= -1
     
-    return dataset.x.numpy(), dataset.y.numpy(), np.array(max_pos), np.array(maximum)
+    return dataset.rescale(dataset.x).numpy(), dataset.y.numpy()
 
 if __name__ == "__main__":
     config = {'iterations':200, 'initial_observations':1, 'dataset':'sine',}
-    results = run_bo_experiment(config, maximizing=False)
+    results = run_bo_experiment(config, maximizing=False, print_progress=True)
     print(results)
