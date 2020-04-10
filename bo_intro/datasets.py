@@ -5,20 +5,20 @@ import math
 
 class Sine:
     def __init__(self, config):
-        bounds = torch.tensor([[1.0, 2.0]], dtype=torch.double)
+        bounds = torch.tensor([[0, 2*np.pi]], dtype=torch.double)
         self.min, _ = torch.min(bounds, dim=1, keepdim=True)
         self.min = torch.transpose(self.min, 0, 1)
         self.interval = torch.abs(bounds[:, 0] - bounds[:, 1])
-        self.noise = config['noise']
+        self.noise = config.setdefault('noise', 0)
         self.dim = bounds.shape[0]
-        self.num_points = config['initial_observations']
+        self.num_points = config.setdefault('initial_observations', 0)
         self.x = torch.rand(self.num_points, self.dim, dtype=torch.double)
         self.y = self.query(self.x)
         self.max = 1
 
     def query(self, x):
         x_rescaled = self.rescale(x)
-        y = torch.sin(x_rescaled * (2 * math.pi))
+        y = torch.sin(x_rescaled)
         y = self.add_noise(y)
         return y
         
