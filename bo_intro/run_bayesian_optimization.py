@@ -13,8 +13,6 @@ from botorch.sampling.samplers import SobolQMCNormalSampler
 from gpytorch.mlls import ExactMarginalLogLikelihood
 from botorch.settings import suppress_botorch_warnings
 
-import datasets
-
 
 def load_dataset(config):
     if config['dataset'] == 'sine':
