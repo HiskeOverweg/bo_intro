@@ -2,6 +2,7 @@ import torch
 import numpy as np
 import sys
 import warnings
+import bo_intro.datasets
 from botorch.models import SingleTaskGP
 from botorch.optim import optimize_acqf
 from botorch.optim.fit import fit_gpytorch_scipy
@@ -16,9 +17,9 @@ from botorch.settings import suppress_botorch_warnings
 
 def load_dataset(config):
     if config['dataset'] == 'sine':
-        return datasets.Sine(config)
+        return bo_intro.datasets.Sine(config)
     elif config['dataset'] == 'branin':
-        return datasets.Branin(config)
+        return bo_intro.datasets.Branin(config)
     else:
         raise ValueError('dataset {} does not exist'.format(config['dataset']))
 
