@@ -98,7 +98,18 @@ def bo_iteration(config, dataset, state_dict, iteration, seed):
     state_dict = gp.state_dict()
     return new_x, new_y, state_dict
 
-def run_bo_experiment(config, maximizing=True, seed=0, print_progress=False):
+def run_bo_experiment(config, seed=0, print_progress=False):
+    """
+    Run a Bayesian optimization experiment
+
+    Args:
+        config: a dictionary containing the configuration
+        seed: int, random seed for random number generators
+        print_progress: bool, indicates whether progress per iteration should be printed
+
+    Returns:
+        x, y values of queried points (numpy array, numpy array)
+    """
     torch.manual_seed(seed)
     suppress_botorch_warnings(False)
     warnings.filterwarnings('ignore', 'Unknown solver options: seed')
