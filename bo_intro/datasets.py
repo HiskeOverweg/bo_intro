@@ -4,7 +4,7 @@ import math
 
 
 class Sine:
-    def __init__(self, config):
+    def __init__(self, config={}):
         bounds = torch.tensor([[0, 2*np.pi]], dtype=torch.double)
         self.min, _ = torch.min(bounds, dim=1, keepdim=True)
         self.min = torch.transpose(self.min, 0, 1)
@@ -51,7 +51,7 @@ class Branin(Sine):
     """
     negative of the branin function https://www.sfu.ca/~ssurjano/branin.html
     """
-    def __init__(self, config):
+    def __init__(self, config={}):
         bounds = torch.tensor([[-5.0, 10.0], [0.0, 15.0]], dtype = torch.double)
         self.min, _ = torch.min(bounds, dim=1, keepdim=True)
         self.min = torch.transpose(self.min, 0, 1)
