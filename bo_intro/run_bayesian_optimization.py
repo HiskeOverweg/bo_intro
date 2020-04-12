@@ -29,6 +29,7 @@ def load_acquisition_function(config, model, dataset, y, seed):
         return UpperConfidenceBound(model, beta=beta)
     elif config['acquisition_function'] == 'EI':
         return ExpectedImprovement(model, best_f=y.max())
+    config.setdefault('mc_samples', 500)
     sampler = SobolQMCNormalSampler(num_samples=config['mc_samples'], seed=seed)
     if config['acquisition_function'] == 'qNEI':
         qNEI = qNoisyExpectedImprovement(
