@@ -16,36 +16,36 @@ from botorch.settings import suppress_botorch_warnings
 
 
 def load_dataset(config):
-    if config['dataset'] == 'sine':
+    if config['dataset'].lower() == 'sine':
         return bo_intro.datasets.Sine(config)
-    elif config['dataset'] == 'branin':
+    elif config['dataset'].lower() == 'branin':
         return bo_intro.datasets.Branin(config)
     else:
         raise ValueError('dataset {} does not exist'.format(config['dataset']))
 
 def load_acquisition_function(config, model, dataset, y, seed):
-    if config['acquisition_function'] == 'ucb':
+    if config['acquisition_function'].lower() == 'ucb':
         beta = config.setdefault('beta', 3)
         return UpperConfidenceBound(model, beta=beta)
-    elif config['acquisition_function'] == 'EI':
+    elif config['acquisition_function'].lower() == 'ei':
         return ExpectedImprovement(model, best_f=y.max())
     config.setdefault('mc_samples', 500)
     sampler = SobolQMCNormalSampler(num_samples=config['mc_samples'], seed=seed)
-    if config['acquisition_function'] == 'qNEI':
+    if config['acquisition_function'].lower() == 'qnei':
         qNEI = qNoisyExpectedImprovement(
             model=model, 
             X_baseline=dataset.x,
             sampler=sampler, 
         )
         return qNEI
-    elif config['acquisition_function'] == 'qUCB':
+    elif config['acquisition_function'].lower() == 'qucb':
         qUCB = qUpperConfidenceBound(
             model=model, 
             beta=config['beta'],
             sampler=sampler, 
         )
         return qUCB
-    elif config['acquisition_function'] == 'qEI':
+    elif config['acquisition_function'].lower() == 'qei':
         qEI = qExpectedImprovement(
             model=model, 
             best_f = y.max(),
@@ -82,7 +82,7 @@ def bo_iteration(config, dataset, state_dict, iteration, seed):
     # because of bad initial conditions
     random_search = False
 
-    if config['acquisition_function'] == 'random':
+    if config['acquisition_function'].lower() == 'random':
         new_x = torch.rand(config['batch_size'], dataset.dim, dtype=torch.double)
 
     else:
@@ -135,5 +135,5 @@ def run_bo_experiment(config, seed=0, print_progress=False):
 
 if __name__ == "__main__":
     config = {'iterations':200, 'initial_observations':1, 'dataset':'sine',}
-    results = run_bo_experiment(config, maximizing=False, print_progress=True)
+    results = run_bo_experiment(config, print_progress=True)
     print(results)
