@@ -132,9 +132,6 @@ def run_bo_experiment(config, seed=0, print_progress=False):
             if maximizing:
                 print('Optimum found upto iteration {}: {}'.format(iteration, dataset.y.max().numpy()))
             else: print('Optimum found upto iteration {}: {}'.format(iteration, -dataset.y.max().numpy()))
-
-    if not maximizing:
-        dataset.y *= -1
     
     return dataset.rescale(dataset.x).numpy(), dataset.y.numpy()
 
