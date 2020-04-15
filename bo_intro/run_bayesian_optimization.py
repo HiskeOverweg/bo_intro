@@ -129,7 +129,7 @@ def run_bo_experiment(config, seed=0, print_progress=False):
         new_x, new_y, state_dict = bo_iteration(config, dataset, state_dict, iteration, seed)
         dataset.add(new_x, new_y)
         if print_progress:
-            print('Optimum found upto iteration {}: {}'.format(iteration, -dataset.y.max().numpy()))
+            print('Optimum found upto iteration {}: {}'.format(iteration, dataset.y.max().numpy()))
     
     return dataset.rescale(dataset.x).numpy(), dataset.y.numpy()
 
